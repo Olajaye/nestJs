@@ -3,6 +3,7 @@ import {UserService} from "./user.service"
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ApiOkResponse, ApiQuery } from '@nestjs/swagger';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 @Controller('user')
 export class UserController {
 
@@ -14,12 +15,7 @@ export class UserController {
   findAll(@Query("role") role?: "INTEN" | "ADMIN" | "DOCTOR" ) {
     return this.userService.findAll(role)
   }
- 
-  
-  // @Get("intens") //user/intens
-  // findAllIntens(): string {
-  //   return "ckecking"
-  // }
+
 
   @Get(":id") 
   findOne(@Param("id", ParseIntPipe) id:number) {
@@ -41,4 +37,6 @@ export class UserController {
   delete(@Param('id', ParseIntPipe) id: number) {
     return this.userService.delete(id)
   }
+
+  
 }

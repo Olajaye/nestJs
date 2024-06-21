@@ -1,10 +1,14 @@
 import { Injectable, Delete, NotFoundException } from '@nestjs/common';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { CreateUserDto } from './dto/create-user.dto';
+import { EventEmitter } from 'stream';
+import { EventEmitter2 } from '@nestjs/event-emitter';
+import { Otherservice } from './other.service';
 
 @Injectable()
 export class UserService {
 
+  constructor(private eventEmitter: EventEmitter2) { }
   private users = [
     {
       "id": 1,
@@ -35,17 +39,21 @@ export class UserService {
 
   findAll(role?: "INTEN" | "ADMIN" | "DOCTOR") {
     if (role) {
-      const roleArray = this.users.filter(user=> user.role === role)
-      if (roleArray.length === 0) throw new NotFoundException("User Role Not Found") 
+      const roleArray = this.users.filter(user => user.role === role)
+      if (roleArray.length === 0) throw new NotFoundException("User Role Not Found")
       return roleArray
     }
+   
     return this.users
   }
 
-  findOne(id: number) {
+  async findOne(id: number) {
     const user = this.users.find(user => user.id === id)
-    if(!user) throw new NotFoundException("User Not Found")
+    if (!user) throw new NotFoundException("User Not Found")
   
+    const title = "event emmiter in user service"
+    const result = await this.eventEmitter.emitAsync("video.created", { title })
+    console.log(result)
     return user
   }
 
@@ -60,9 +68,9 @@ export class UserService {
   }
 
   update(id: number, updateUser: UpdateUserDto) {
-   this.users = this.users.map(user => {
+    this.users = this.users.map(user => {
       if (user.id === id) {
-        return {...user, ...updateUser}
+        return { ...user, ...updateUser }
       }
       return user
     })
@@ -77,4 +85,6 @@ export class UserService {
     
     return removedUser
   }
+
+
 }
