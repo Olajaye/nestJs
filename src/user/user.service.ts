@@ -8,7 +8,7 @@ import { Otherservice } from './other.service';
 @Injectable()
 export class UserService {
 
-  constructor(private eventEmitter: EventEmitter2) { }
+  // constructor(private eventEmitter: EventEmitter2) { }
   private users = [
     {
       "id": 1,
@@ -51,9 +51,9 @@ export class UserService {
     const user = this.users.find(user => user.id === id)
     if (!user) throw new NotFoundException("User Not Found")
   
-    const title = "event emmiter in user service"
-    const result = await this.eventEmitter.emitAsync("video.created", { title })
-    console.log(result)
+    // const title = "event emmiter in user service"
+    // const result = await this.eventEmitter.emitAsync("video.created", { title })
+    // console.log(result)
     return user
   }
 
